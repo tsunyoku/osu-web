@@ -105,6 +105,14 @@ Field      | Type                                  | Description
 beatmapset | [Event.Beatmapset](#event-beatmapset) | |
 user       | [Event.User](#event-user)             | Beatmapset owner.
 
+#### beatmapsetGraveyard
+
+When a beatmapset is placed into graveyard status.
+
+Field      | Type
+-----------|--------------------------------------
+beatmapset | [Event.Beatmapset](#event-beatmapset)
+
 #### rank
 
 When a user achieves a certain rank on a beatmap.

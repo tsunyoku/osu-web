@@ -13,6 +13,7 @@ const eventTypes = [
   'beatmapsetRevive',
   'beatmapsetUpdate',
   'beatmapsetUpload',
+  'beatmapsetGraveyard',
   'rank',
   'rankLost',
   'usernameChange',
@@ -87,6 +88,11 @@ interface BeatmapsetUploadEvent extends EventBase {
   user: EventUser;
 }
 
+interface BeatmapsetGraveyardEvent extends EventBase {
+  beatmapset: EventBeatmapset;
+  type: 'beatmapsetGraveyard';
+}
+
 interface RankEvent extends EventBase {
   beatmap: EventBeatmap;
   mode: GameMode;
@@ -133,6 +139,7 @@ type EventJson =
   | BeatmapsetReviveEvent
   | BeatmapsetUpdateEvent
   | BeatmapsetUploadEvent
+  | BeatmapsetGraveyardEvent
   | RankEvent
   | RankLostEvent
   | UserSupportAgainEvent
