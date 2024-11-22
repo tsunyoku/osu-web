@@ -54,9 +54,10 @@ const linkMapping: Record<LinkKey, (user: UserExtendedJson) => LinkProps> = {
     text: user.occupation,
   }),
   twitter: (user: UserExtendedJson) => ({
-    icon: 'fab fa-twitter',
+    icon: isBlueskyHandle(user.twitter) ? 'fab fa-bluesky' : 'fab fa-twitter',
     text: `@${user.twitter}`,
-    url: `https://twitter.com/${user.twitter}`,
+    url: isBlueskyHandle(user.twitter) ? `https://bsky.app/profile/${user.twitter}` : `https://twitter.com/${user.twitter}`,
+    title: isBlueskyHandle(user.twitter) ? 'Bluesky' : 'Twitter',
   }),
   website: (user: UserExtendedJson) => ({
     icon: 'fas fa-link',
@@ -136,6 +137,13 @@ const textMapping: Record<TextKey, (user: UserExtendedJson) => StringWithCompone
     };
   },
 };
+
+function isBlueskyHandle(handle: string | null) {
+  // we're assuming it's a bluesky handle if it contains a dot because:
+  // - twitter does not allow dots in handles
+  // - bluesky handles rely entirely on domains, so a dot has to be present
+  return handle?.includes('.');
+}
 
 function Link(props: LinkProps) {
   return (

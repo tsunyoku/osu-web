@@ -2344,7 +2344,15 @@ class User extends Model implements AfterCommit, AuthenticatableContract, HasLoc
 
         if ($this->isDirty('user_twitter') && present($this->user_twitter)) {
             // https://help.twitter.com/en/managing-your-account/twitter-username-rules
-            if (!preg_match('/^[a-zA-Z0-9_]{1,15}$/', $this->user_twitter)) {
+            $validTwitterHandle = preg_match('/^[a-zA-Z0-9_]{1,15}$/', $this->user_twitter);
+
+            // https://github.com/bluesky-social/atproto/blob/011e73ec05b0db34f7c1d12382ec46e910e2d4dd/packages/syntax/src/handle.ts#L77-L88
+            $validBlueskyHandle = preg_match(
+                '/^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/',
+                $this->user_twitter,
+            ) && strlen($this->user_twitter) <= 253;
+
+            if (!$validTwitterHandle && !$validBlueskyHandle) {
                 $this->validationErrors()->add('user_twitter', '.invalid_twitter');
             }
         }

@@ -52,7 +52,7 @@ return [
                 'user_from' => 'current location',
                 'user_interests' => 'interests',
                 'user_occ' => 'occupation',
-                'user_twitter' => 'twitter',
+                'user_twitter' => 'twitter/bluesky',
                 'user_website' => 'website',
             ],
         ],
