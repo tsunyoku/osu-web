@@ -16,7 +16,7 @@ class RoomsController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth', ['except' => 'show']);
+        $this->middleware('auth', ['except' => ['show', 'leaderboard']]);
         $this->middleware('require-scopes:public', ['only' => ['index', 'leaderboard', 'show']]);
     }
 
@@ -126,21 +126,29 @@ class RoomsController extends Controller
         $limit = \Number::clamp(get_int(request('limit')) ?? Model::PER_PAGE, 1, 50);
         $room = Room::findOrFail($roomId);
 
-        // leaderboard currently requires auth so auth()->check() is not required.
-        $userScore = $room->topScores()->where('user_id', auth()->id())->first();
+        $user = \Auth::user();
 
-        return [
+        $userScore = $user !== null
+            ? $room->topScores()->where('user_id', $user->getKey())->first()
+            : null;
+
+        $leaderboardJson = [
             'leaderboard' => json_collection(
                 $room->topScores()->paginate($limit),
                 'Multiplayer\UserScoreAggregate',
                 ['user.country']
             ),
-            'user_score' => $userScore !== null ? json_item(
+        ];
+
+        if ($user !== null) {
+            $leaderboardJson['user_score'] = $userScore !== null ? json_item(
                 $userScore,
                 'Multiplayer\UserScoreAggregate',
                 ['position', 'user.country']
-            ) : null,
-        ];
+            ) : null;
+        }
+
+        return $leaderboardJson;
     }
 
     public function part($roomId, $userId)
