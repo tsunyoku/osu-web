@@ -15,7 +15,7 @@ use App\Models\UserProfileCustomization;
 
 class ScoreSearchParams extends SearchParams
 {
-    const VALID_TYPES = ['global', 'country', 'friend'];
+    const VALID_TYPES = ['global', 'country', 'friend', 'team'];
     const DEFAULT_TYPE = 'global';
 
     public ?array $beatmapIds = null;
@@ -30,6 +30,7 @@ class ScoreSearchParams extends SearchParams
     public $size = 50;
     public ?User $user = null;
     public ?int $userId = null;
+    public ?int $teamId = null;
 
     private ?string $countryCode = null;
     private string $type = self::DEFAULT_TYPE;
@@ -45,6 +46,7 @@ class ScoreSearchParams extends SearchParams
         $params->mods = $rawParams['mods'] ?? null;
         $params->rulesetId = $rawParams['ruleset_id'] ?? null;
         $params->userId = $rawParams['user_id'] ?? null;
+        $params->teamId = $rawParams['team_id'] ?? null;
 
         $params->setCountryCode($rawParams['country_code'] ?? null);
         $params->setType($rawParams['type'] ?? null);
@@ -96,6 +98,11 @@ class ScoreSearchParams extends SearchParams
     public function getCountryCode(): string
     {
         return $this->countryCode ?? $this->user->country_acronym;
+    }
+
+    public function getTeamId(): ?int
+    {
+        return $this->teamId ?? $this->user->team?->getKey();
     }
 
     public function getFriendIds(): array

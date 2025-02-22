@@ -169,8 +169,9 @@ return [
             'error' => 'Failed loading ranking',
             'friend' => 'Friend Ranking',
             'global' => 'Global Ranking',
+            'team' => 'Team Ranking',
             'supporter-link' => 'Click <a href=":link">here</a> to see all the fancy features that you get!',
-            'supporter-only' => 'You need to be an osu!supporter to access the friend, country, or mod-specific rankings!',
+            'supporter-only' => 'You need to be an osu!supporter to access the friend, country, team or mod-specific rankings!',
             'title' => 'Scoreboard',
 
             'headers' => [
@@ -191,6 +192,7 @@ return [
                 'country' => 'No one from your country has set a score on this map yet!',
                 'friend' => 'None of your friends have set a score on this map yet!',
                 'global' => 'No scores yet. Maybe you should try setting some?',
+                'team' => 'None of your fellow team members have set a score on this map yet!',
                 'loading' => 'Loading scores...',
                 'unranked' => 'Unranked beatmap.',
             ],

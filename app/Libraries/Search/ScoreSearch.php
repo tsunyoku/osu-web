@@ -62,12 +62,19 @@ class ScoreSearch extends RecordSearch
 
         $this->addModsFilter($query);
 
+        $teamId = $this->params->getTeamId();
+
         switch ($this->params->getType()) {
             case 'country':
                 $query->filter(['term' => ['country_code' => $this->params->getCountryCode()]]);
                 break;
             case 'friend':
                 $query->filter(['terms' => ['user_id' => $this->params->getFriendIds()]]);
+                break;
+            case 'team':
+                if ($teamId !== null) {
+                    $query->filter(['term' => ['team_id' => $teamId]]);
+                }
                 break;
         }
 
