@@ -74,8 +74,8 @@ class ScoresController extends Controller
 
         $score = $soloScore->legacyScore() ?? $soloScore;
 
-        $file = Replay::get($score->getKey(), Beatmap::MODES[$score->getMode()], $score instanceof ScoreBest);
-        if ($file === null) {
+        $replay = Replay::get($score->getKey(), Beatmap::MODES[$score->getMode()], $score instanceof ScoreBest);
+        if ($replay === null) {
             abort(404);
         }
 
@@ -121,10 +121,10 @@ class ScoresController extends Controller
             : $score->ended_at;
 
         // If the replay is new enough to have been served by cache, don't count it towards any rate limits.
-        RequestCost::setCost($scoreDate < Carbon::now()->subHours(24) ? 1 : 0, request(), false);
+        RequestCost::setCost($replay['cache_hit'] ? 0 : 1, request(), false);
 
-        return response()->streamDownload(function () use ($file) {
-            echo $file;
+        return response()->streamDownload(function () use ($replay) {
+            echo $replay['replay'];
         }, $this->makeReplayFilename($score), $responseHeaders);
     }
 
