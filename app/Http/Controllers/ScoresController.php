@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Ruleset;
+use App\Http\Middleware\RequestCost;
 use App\Libraries\Replay;
 use App\Models\Beatmap;
 use App\Models\Score\Best\Model as ScoreBest;
@@ -13,6 +14,7 @@ use App\Models\ScoreReplayStats;
 use App\Models\Solo\Score as SoloScore;
 use App\Transformers\ScoreTransformer;
 use App\Transformers\UserCompactTransformer;
+use Carbon\Carbon;
 use Illuminate\Auth\AuthenticationException;
 
 class ScoresController extends Controller
@@ -113,6 +115,13 @@ class ScoresController extends Controller
         static $responseHeaders = [
             'Content-Type' => 'application/x-osu-replay',
         ];
+
+        $scoreDate = $score instanceof ScoreBest
+            ? $score->date
+            : $score->ended_at;
+
+        // If the replay is new enough to have been served by cache, don't count it towards any rate limits.
+        RequestCost::setCost($scoreDate < Carbon::now()->subHours(24) ? 1 : 0, request(), false);
 
         return response()->streamDownload(function () use ($file) {
             echo $file;

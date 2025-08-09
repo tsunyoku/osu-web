@@ -17,10 +17,10 @@ class RequestCost
         return $request->attributes->get('request_cost', 1);
     }
 
-    public static function setCost(int $cost, ?Request $request = null)
+    public static function setCost(int $cost, ?Request $request = null, bool $clampCost = true)
     {
         // max(1, ) is a convenience for callers that use count()
-        ($request ?? request())->attributes->set('request_cost', max(1, $cost));
+        ($request ?? request())->attributes->set('request_cost', max($clampCost ? 1 : 0, $cost));
     }
 
     public function handle(Request $request, Closure $next, int $cost = 1)
