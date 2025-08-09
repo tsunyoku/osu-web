@@ -6,6 +6,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Ruleset;
+use App\Libraries\Replay;
 use App\Models\Beatmap;
 use App\Models\Score\Best\Model as ScoreBest;
 use App\Models\ScoreReplayStats;
@@ -71,7 +72,7 @@ class ScoresController extends Controller
 
         $score = $soloScore->legacyScore() ?? $soloScore;
 
-        $file = $score->getReplayFile();
+        $file = Replay::get($score->getKey(), Beatmap::MODES[$score->getMode()], $score instanceof ScoreBest);
         if ($file === null) {
             abort(404);
         }

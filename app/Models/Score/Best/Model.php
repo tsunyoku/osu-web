@@ -5,7 +5,7 @@
 
 namespace App\Models\Score\Best;
 
-use App\Libraries\ReplayFile;
+use App\Libraries\Replay;
 use App\Models\Beatmap;
 use App\Models\Country;
 use App\Models\ReplayViewCount;
@@ -70,16 +70,6 @@ abstract class Model extends BaseModel implements Traits\ReportableInterface
             'reportedIn',
             'user' => $this->getRelationValue($key),
         };
-    }
-
-    public function replayFile(): ?ReplayFile
-    {
-        return $this->replay ? new ReplayFile($this) : null;
-    }
-
-    public function getReplayFile(): ?string
-    {
-        return $this->replayFile()?->get();
     }
 
     public function macroForListing(): \Closure
@@ -197,7 +187,7 @@ abstract class Model extends BaseModel implements Traits\ReportableInterface
             return parent::delete();
         });
 
-        $this->replayFile()?->delete();
+        Replay::delete($this->getKey(), Beatmap::modeInt($this->getMode()), true);
 
         return $result;
     }

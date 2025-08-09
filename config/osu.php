@@ -185,6 +185,10 @@ return [
     ],
     'score_replays' => [
         'storage' => env('SCORE_REPLAYS_STORAGE', 'local'),
+
+        'replay_cache' => [
+            'server_url' => presence(env('SCORE_REPLAY_CACHE_SERVER_URL')) ?? 'http://localhost:5166',
+        ]
     ],
     'scores' => [
         'es_cache_duration' => 60 * (get_float(env('SCORES_ES_CACHE_DURATION')) ?? 0.5), // in minutes, converted to seconds

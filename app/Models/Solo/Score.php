@@ -139,16 +139,6 @@ class Score extends Model implements Traits\ReportableInterface
         return $params;
     }
 
-    public static function replayFileDiskName(): string
-    {
-        return "{$GLOBALS['cfg']['osu']['score_replays']['storage']}-solo-replay";
-    }
-
-    public static function replayFileStorage(): Filesystem
-    {
-        return \Storage::disk(static::replayFileDiskName());
-    }
-
     public function beatmap()
     {
         return $this->belongsTo(Beatmap::class, 'beatmap_id');
@@ -327,11 +317,6 @@ class Score extends Model implements Traits\ReportableInterface
     public function getMode(): string
     {
         return Beatmap::modeStr($this->ruleset_id);
-    }
-
-    public function getReplayFile(): ?string
-    {
-        return static::replayFileStorage()->get($this->getKey());
     }
 
     public function isLegacy(): bool
